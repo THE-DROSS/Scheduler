@@ -74,11 +74,8 @@ WSGI_APPLICATION = 'Scheduler.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rebdu_nii',
-        'HOST': 'public.rebdu.tyo1.database-hosting.conoha.io',
-        'USER': 'rebdu_nii_program',
-        'PASSWORD': 'NIILearningProgram9999@'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
