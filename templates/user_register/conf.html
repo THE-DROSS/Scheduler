@@ -1,0 +1,7 @@
+<form action="{% url 'user_register:comp' %}" method="post">
+{% csrf_token %}
+    {{ id }}<br>
+    {{ pass }}<br>
+    {{ email }}<br><br>
+    <input type="submit" value="comp" >
+</form>

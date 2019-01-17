@@ -29,13 +29,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'user_register.apps.UserRegisterConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    # 'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_register',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ ROOT_URLCONF = 'Scheduler.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.jinja2.Jinja2'
+        'BACKEND': 'django.template.backends.django.DjangoTemplates'
         ,
         'DIRS': [os.path.join(BASE_DIR, 'templates')]
         ,
