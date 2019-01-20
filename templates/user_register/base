@@ -5,7 +5,7 @@
 </head>
 <body>
 <div id="content">
-    {% block content %}{% endblock %}
+    {% block content %}test{% endblock %}
 </div>
 </body>
 </html>
