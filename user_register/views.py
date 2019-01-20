@@ -2,13 +2,15 @@
 
 from django.shortcuts import render
 from user_register.models import Account
+from user_register.forms import UserRegisterForm
 
 # def input(request, params):
 #     param = params
 #     return render(request, 'user_register/input', {'param': param})
 
 def input(request):
-    return render(request, 'user_register/input')
+    form = UserRegisterForm()
+    return render(request, 'user_register/input', {'form1': form})
 
 def conf(request):
     conf_id = request.POST['id']
