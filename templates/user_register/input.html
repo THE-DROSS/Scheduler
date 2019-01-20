@@ -1,10 +1,10 @@
-{% extends "base" %}
+{% extends "user_register/base.html" %}
 
 {% block title %}Input{% endblock %}
 
 {% block content %}
-<form action="{% url 'user_register:conf' %}" method="post">
-{% csrf_token %}
+<form action="conf/" method="post">
+{{ csrf_input }}
     <input type="text" name="id" ><br>
     <input type="text" name="pass" ><br>
     <input type="text" name="email" ><br><br>
