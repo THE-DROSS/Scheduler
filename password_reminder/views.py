@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from jinja2.loaders import Environment
 
 # Create your views here.
 def reminder(request):
-    return render(request, 'password_reminder/reminder.tpl.html', {
+    return render(request, 'password_reminder\\reminder.tpl.html', {
         'foo': 'あ'
     })
 
@@ -23,4 +23,4 @@ def setting(request):
 
 
 def complete(request):
-    return HttpResponse("You're voting on question %s." % question_id)
+    return HttpResponse("You're voting on question %s.")
