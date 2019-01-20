@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from . import views
 
 urlpatterns = [
-    path('password_reminder/', include('password_reminder.urls')),
-    path('admin/', admin.site.urls)
+    path('', views.reminder, name='reminder'),
+    path('', views.display, name='display'),
+    path('', views.input_pass, name='input'),
+    path('', views.setting, name='setting'),
+    path('', views.complete, name='setting'),
 ]
