@@ -11,18 +11,18 @@ def input(request):
     return render(request, 'user_register/input')
 
 def conf(request):
-    confId = request.POST['id']
-    confPass = request.POST['pass']
-    confEmail = request.POST['email']
-    request.session['id'] = confId
-    request.session['pass'] = confPass
-    request.session['email'] = confEmail
-    return render(request, 'user_register/conf', {'id':confId, 'pass':confPass, 'email':confEmail})
+    conf_id = request.POST['id']
+    conf_pass = request.POST['pass']
+    conf_email = request.POST['email']
+    request.session['id'] = conf_id
+    request.session['pass'] = conf_pass
+    request.session['email'] = conf_email
+    return render(request, 'user_register/conf', {'id':conf_id, 'pass':conf_pass, 'email':conf_email})
 
 def comp(request):
-    compId = request.session['id']
-    compPass = request.session['pass']
-    compEmail = request.session['email']
-    account = Account(id=compId, pass_hash=compPass, email_address=compEmail)
+    comp_id = request.session['id']
+    comp_pass = request.session['pass']
+    comp_email = request.session['email']
+    account = Account(id=comp_id, pass_hash=comp_pass, email_address=comp_email)
     account.save()
     return render(request, 'user_register/comp')
