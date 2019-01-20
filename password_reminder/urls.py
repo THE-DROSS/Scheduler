@@ -19,8 +19,8 @@ from . import views
 
 urlpatterns = [
     path('', views.reminder, name='reminder'),
-    path('', views.display, name='display'),
-    path('', views.input_pass, name='input'),
-    path('', views.setting, name='setting'),
-    path('', views.complete, name='setting'),
+    path('display/', views.display, name='display'),
+    path('input/', views.input_pass, name='input'),
+    path('setting/', views.setting, name='setting'),
+    path('complete/', views.complete, name='complete'),
 ]

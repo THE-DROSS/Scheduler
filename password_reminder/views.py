@@ -1,16 +1,32 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from jinja2.loaders import Environment
+from password_reminder.forms import PasswordReminderForm
+from django.template import RequestContext
+from password_reminder.models import PassWordReminder
+
 
 # Create your views here.
 def reminder(request):
-    return render(request, 'password_reminder\\reminder.tpl.html', {
-        'foo': 'あ'
-    })
+    form = PasswordReminderForm()
+    return render(request, 'password_reminder/reminder.tpl', {'form': form})
 
 
 def display(request):
-    return render(request, "You're looking at question")
+    req_email = request.POST['email']
+
+    # バリデーション
+    # validate(req_email)
+
+    # ワンタイムパスワードの生成
+    # onetime_password = create_onetime_password()
+
+    # メールの送信
+    # send_password_reminder_email(req_email)
+
+    form = PasswordReminderForm()
+    form.email = req_email
+    form.password = 'onetime_password'
+    return render(request, 'password_reminder/display.tpl', {'form': form})
 
 
 def input_pass(request):
