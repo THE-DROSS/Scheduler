@@ -3,12 +3,26 @@
 {% block title %}Conf{% endblock %}
 
 {% block content %}
+<table>
+    {% for item in form %}
+    <tr>
+        <th>
+            {{ item.label_tag() }}
+        </th>
+        <td>
+            {{ item.value() }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 <form action="../comp/" method="post">
-{{ csrf_input }}
-    {{ id }}<br>
-    {{ pass }}<br>
-    {{ email }}<br><br>
-    <input type="submit" value="comp" >
+    {% for item in form %}{{ item.as_hidden() }}{% endfor %}
+    <input type="submit" value="登録" >
+    {{ csrf_input }}
 </form>
-<input type="submit" onclick="location.href='../input'" value="back" >
+<form action="../input/" method="post">
+    {% for item in form %}{{ item.as_hidden() }}{% endfor %}
+    <input type="submit" value="戻る" >
+    {{ csrf_input }}
+</form>
 {% endblock %}

@@ -5,9 +5,9 @@
 {% block content %}
 <form action="../conf/" method="post">
 {{ csrf_input }}
-    <input type="text" name="id" ><br>
-    <input type="text" name="pass" ><br>
-    <input type="text" name="email" ><br>
-    <input type="submit" value="conf" >
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="確認" >
 </form>
 {% endblock %}
