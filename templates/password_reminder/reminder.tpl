@@ -6,9 +6,9 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="./display/" method="post">
+<form action="." method="post">
 {{ csrf_input }}
-    <input type="text" name="email">
-    <input type="submit"value="送信">
+    {{form.email}}
+    <input type="submit"value="送信" />
 </form>
 {% endblock %}
