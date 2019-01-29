@@ -31,8 +31,7 @@ def comp(request):
     comp_id = request.POST['id']
     comp_pass = request.POST['pass_hash']
     comp_email = request.POST['email_address']
-    account = Account(id=comp_id, pass_hash=comp_pass, email_address=comp_email)
-    if UserRegister.user_register(account):
+    if UserRegister.user_register(comp_id, comp_pass, comp_email):
         return render(request, 'user_register/comp')
     else:
         form = AccountForm(request.POST)
