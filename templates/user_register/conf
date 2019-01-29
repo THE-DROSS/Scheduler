@@ -1,0 +1,28 @@
+{% extends "user_register/base" %}
+
+{% block title %}Conf{% endblock %}
+
+{% block content %}
+<table>
+    {% for item in form %}
+    <tr>
+        <th>
+            {{ item.label_tag() }}
+        </th>
+        <td>
+            {{ item.value() }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<form action="../comp/" method="post">
+    {% for item in form %}{{ item.as_hidden() }}{% endfor %}
+    <input type="submit" value="登録" >
+    {{ csrf_input }}
+</form>
+<form action="../input/" method="post">
+    {% for item in form %}{{ item.as_hidden() }}{% endfor %}
+    <input type="submit" value="戻る" >
+    {{ csrf_input }}
+</form>
+{% endblock %}

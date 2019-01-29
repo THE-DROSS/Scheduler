@@ -1,0 +1,13 @@
+{% extends "user_register/base" %}
+
+{% block title %}Input{% endblock %}
+
+{% block content %}
+<form action="../conf/" method="post">
+{{ csrf_input }}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="確認" >
+</form>
+{% endblock %}
