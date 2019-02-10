@@ -22,18 +22,20 @@ def reminder(request):
 
         # TODO アカウント情報の取得
         # テストコード 本来はアカウントモデルから取得した値を使用
-        account_id = "99999"
+        account_id = "0123456789"
         # for account in result: account_id = account.id
-
 
         onetime_password = secrets.token_hex()
         try:
-            PasswordReminder.create(account_id, onetime_password)
-        except:
+            models = PasswordReminder()
+            models.save(account_id, onetime_password)
+        except Exception as e:
+            print('type:' + str(type(e)))
+            print('args:' + str(e.args))
             error_message = "予期せぬエラーが発生しました。もう一度メールアドレスを送信してください。"
             return render(request, 'password_reminder/reminder.tpl',
-                             {'form': form,
-                              'error_message': error_message})
+                      {'form': form,
+                       'error_message': error_message})
 
         # TODO メールの送信
         # send_password_reminder_email(req_email)
