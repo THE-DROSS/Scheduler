@@ -19,7 +19,7 @@ from . import views
 
 urlpatterns = [
     path('', views.reminder, name='reminder'),
-    path('input/', views.input_pass, name='input'),
+    path('input/<str:onetime_url_param>', views.input_pass, name='input'),
     path('setting/', views.setting, name='setting'),
     path('complete/', views.complete, name='complete'),
 ]

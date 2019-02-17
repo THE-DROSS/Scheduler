@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from password_reminder.urls import path
 from password_reminder.forms import PasswordReminderForm
 from password_reminder.models import PasswordReminder
+from django.core.mail import BadHeaderError, send_mail
+import os.path
 import secrets
 
 from django.template import RequestContext
@@ -25,20 +28,37 @@ def reminder(request):
         account_id = "0123456789"
         # for account in result: account_id = account.id
 
+        onetime_url_param = secrets.token_hex()
         onetime_password = secrets.token_hex()
         try:
             models = PasswordReminder()
-            models.save(account_id, onetime_password)
+            models.save(account_id, onetime_url_param, onetime_password)
         except Exception as e:
             print('type:' + str(type(e)))
             print('args:' + str(e.args))
             error_message = "予期せぬエラーが発生しました。もう一度メールアドレスを送信してください。"
             return render(request, 'password_reminder/reminder.tpl',
-                      {'form': form,
-                       'error_message': error_message})
+                          {'form': form,
+                           'error_message': error_message})
 
-        # TODO メールの送信
-        # send_password_reminder_email(req_email)
+        try:
+            # メールの送信
+            subject = "スケジューラからパスワード再設定用URLをお送りします"
+            # REVIEW もう少しきれいな書き方があるはず
+            onetime_url = request.build_absolute_uri() + "input/" + onetime_url_param
+            message = f"下記URLにアクセスし、画面に表示されたパスワードを入力してください。\n {onetime_url}"
+            from_email = "sample@sample.com"
+            recipient_list = [
+                req_email
+            ]
+            send_mail(subject, message, from_email, recipient_list)
+        except BadHeaderError as e:
+            print('type:' + str(type(e)))
+            print('args:' + str(e.args))
+            error_message = "メールの送信に失敗しました。もう一度メールアドレスを送信してください。"
+            return render(request, 'password_reminder/reminder.tpl',
+                          {'form': form,
+                           'error_message': error_message})
 
         form = PasswordReminderForm()
         form.email = req_email
@@ -48,8 +68,9 @@ def reminder(request):
         return render(request, 'password_reminder/reminder.tpl', {'form': form})
 
 
-def input_pass(request):
-    response = "You're looking at the results of question."
+def input_pass(request, onetime_url_param):
+
+    response = onetime_url_param
     return HttpResponse(response)
 
 
