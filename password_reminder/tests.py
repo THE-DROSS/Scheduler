@@ -115,6 +115,7 @@ class PasswordReminderModelSaveTests(TestCase):
             logger.error('args:' + str(e.args))
             self.fail()
 
+
 class PasswordReminderModelIsAvailableUrlTests(TestCase):
 
     @classmethod
@@ -169,6 +170,9 @@ class PasswordReminderModelIsAvailableUrlTests(TestCase):
             register_date=now,
             update_date=now
         )
+
+    def test_is_available_url_not_exist_onetime_url_param(self):
+        self.assertFalse(PasswordReminder.is_available_url("no_data"))
 
     def test_is_available_url_future_no_deleted(self):
         self.assertTrue(PasswordReminder.is_available_url("future_no_deleted"))
