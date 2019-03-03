@@ -29,3 +29,11 @@ class PasswordReminder(models.Model):
         self.update_date = now
 
         super(PasswordReminder, self).save()
+
+    @classmethod
+    def is_available_url(cls, onetime_url_param):
+        cnt = cls.objects.filter(onetime_url_param=onetime_url_param,
+                                 limit_date__gt=datetime.now(),
+                                 delete_flg="0"
+                                 ).count()
+        return cnt > 0

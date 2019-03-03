@@ -5,7 +5,7 @@ import secrets
 import logging
 
 
-class PasswordReminderModelTests(TestCase):
+class PasswordReminderModelSaveTests(TestCase):
     def test_save_OK(self):
         account_id = "test_ac_id"
         onetime_url_param = secrets.token_hex()
@@ -114,3 +114,70 @@ class PasswordReminderModelTests(TestCase):
             logger.error('type:' + str(type(e)))
             logger.error('args:' + str(e.args))
             self.fail()
+
+class PasswordReminderModelIsAvailableUrlTests(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        from datetime import datetime, timedelta
+
+        now = datetime.now()
+        delta = timedelta(minutes=1)
+        future = now + delta
+        past = now - delta
+
+        # 有効期限:未来, 削除フラグ:未削除
+        PasswordReminder.objects.create(
+            account_id="1234567890",
+            limit_date=future,
+            onetime_url_param="future_no_deleted",
+            onetime_pass_hash="1",
+            delete_flg="0",
+            register_date=now,
+            update_date=now
+        )
+
+        # 有効期限:過去, 削除フラグ:未削除
+        PasswordReminder.objects.create(
+            account_id="1234567890",
+            limit_date=past,
+            onetime_url_param="past_no_deleted",
+            onetime_pass_hash="1",
+            delete_flg="0",
+            register_date=now,
+            update_date=now
+        )
+
+        # 有効期限:未来, 削除フラグ:削除
+        PasswordReminder.objects.create(
+            account_id="1234567890",
+            limit_date=future,
+            onetime_url_param="future_deleted",
+            onetime_pass_hash="1",
+            delete_flg="1",
+            register_date=now,
+            update_date=now
+        )
+
+        # 有効期限:過去, 削除フラグ:削除
+        PasswordReminder.objects.create(
+            account_id="1234567890",
+            limit_date=past,
+            onetime_url_param="past_deleted",
+            onetime_pass_hash="1",
+            delete_flg="1",
+            register_date=now,
+            update_date=now
+        )
+
+    def test_is_available_url_future_no_deleted(self):
+        self.assertTrue(PasswordReminder.is_available_url("future_no_deleted"))
+
+    def test_is_available_url_past_no_deleted(self):
+        self.assertFalse(PasswordReminder.is_available_url("past_no_deleted"))
+
+    def test_is_available_url_future_deleted(self):
+        self.assertFalse(PasswordReminder.is_available_url("future_deleted"))
+
+    def test_is_available_url_past_deleted(self):
+        self.assertFalse(PasswordReminder.is_available_url("past_deleted"))

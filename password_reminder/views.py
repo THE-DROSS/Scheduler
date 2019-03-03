@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from password_reminder.urls import path
 from password_reminder.forms import PasswordReminderForm
 from password_reminder.models import PasswordReminder
 from django.core.mail import BadHeaderError, send_mail
-import os.path
 import secrets
 
 from django.template import RequestContext
@@ -69,9 +67,18 @@ def reminder(request):
 
 
 def input_pass(request, onetime_url_param):
+    form = PasswordReminderForm()
+    # 有効期間チェック(発行から30分以内)
+    if not PasswordReminder.is_available_url(onetime_url_param):
+        return render(request, 'password_reminder/expired_url.tpl', {'form': form})
 
-    response = onetime_url_param
-    return HttpResponse(response)
+    if request.method == 'POST':
+        onetime_password = request.POST['password']
+        # TODO ワンタイムパスワード存在チェック
+
+        return render(request, 'password_reminder/setting.tpl', {'form': form})
+    else:
+        return render(request, 'password_reminder/pass_form.tpl', {'form': form})
 
 
 def setting(request):
