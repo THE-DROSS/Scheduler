@@ -6,7 +6,7 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="." method="post">
+<form action="./{{ onetime_url_param }}" method="post">
 {{ csrf_input }}
     パスワードを入力してください。<br>
     {{form.password}}

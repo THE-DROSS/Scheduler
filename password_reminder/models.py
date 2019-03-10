@@ -37,3 +37,14 @@ class PasswordReminder(models.Model):
                                  delete_flg="0"
                                  ).count()
         return cnt > 0
+
+    @classmethod
+    def is_available_password(cls, onetime_url_param, onetime_password):
+        onetime_pass_hash = hashlib.sha512(onetime_password.encode('utf-8')).hexdigest()
+
+        cnt = cls.objects.filter(onetime_url_param=onetime_url_param,
+                                 onetime_pass_hash=onetime_pass_hash,
+                                 limit_date__gt=datetime.now(),
+                                 delete_flg="0"
+                                 ).count()
+        return cnt > 0

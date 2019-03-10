@@ -17,9 +17,9 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 
+app_name = 'password_reminder'
 urlpatterns = [
     path('', views.reminder, name='reminder'),
     path('input/<str:onetime_url_param>', views.input_pass, name='input'),
-    path('setting/', views.setting, name='setting'),
-    path('complete/', views.complete, name='complete'),
+    path('setting/<str:onetime_url_param>', views.setting, name='setting')
 ]

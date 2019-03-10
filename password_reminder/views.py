@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.generic.edit import CreateView
 from password_reminder.forms import PasswordReminderForm
 from password_reminder.models import PasswordReminder
 from django.core.mail import BadHeaderError, send_mail
@@ -26,7 +27,7 @@ def reminder(request):
         account_id = "0123456789"
         # for account in result: account_id = account.id
 
-        onetime_url_param = secrets.token_hex()
+        onetime_url_param = secrets.token_urlsafe()
         onetime_password = secrets.token_hex()
         try:
             models = PasswordReminder()
@@ -42,7 +43,7 @@ def reminder(request):
         try:
             # メールの送信
             subject = "スケジューラからパスワード再設定用URLをお送りします"
-            # REVIEW もう少しきれいな書き方があるはず
+            # HACK もう少しきれいな書き方があるはず
             onetime_url = request.build_absolute_uri() + "input/" + onetime_url_param
             message = f"下記URLにアクセスし、画面に表示されたパスワードを入力してください。\n {onetime_url}"
             from_email = "sample@sample.com"
@@ -74,16 +75,36 @@ def input_pass(request, onetime_url_param):
 
     if request.method == 'POST':
         onetime_password = request.POST['password']
-        # TODO ワンタイムパスワード存在チェック
+        # ワンタイムパスワード存在チェック
+        if not PasswordReminder.is_available_password(onetime_url_param, onetime_password):
+            error_message = "パスワードが間違っています。"
+            return render(request, 'password_reminder/pass_form.tpl',
+                          {'form': form,
+                           'onetime_url_param': onetime_url_param,
+                           'error_message': error_message})
+        else:
+            request.session['pass'] = onetime_password
+            return redirect("password_reminder:setting", onetime_url_param)
 
-        return render(request, 'password_reminder/setting.tpl', {'form': form})
     else:
-        return render(request, 'password_reminder/pass_form.tpl', {'form': form})
+        return render(request, 'password_reminder/pass_form.tpl', {'form': form,
+                                                                   'onetime_url_param': onetime_url_param})
 
 
-def setting(request):
-    return HttpResponse("You're voting on question")
+def setting(request, onetime_url_param):
+    form = PasswordReminderForm()
+    if 'pass' in request.session:
+        onetime_password = request.session['pass']
+    else:
+        return render(request, 'password_reminder/expired_url.tpl', {'form': form})
 
+    # ワンタイムパスワード存在チェック
+    if not PasswordReminder.is_available_password(onetime_url_param, onetime_password):
+        return render(request, 'password_reminder/expired_url.tpl', {'form': form})
 
-def complete(request):
-    return HttpResponse("You're voting on question %s.")
+    if request.method == 'POST':
+        del request.session['pass']
+        return render(request, 'password_reminder/complete.tpl', {'form': form})
+    else:
+        return render(request, 'password_reminder/setting.tpl', {'form': form,
+                                                                 'onetime_url_param': onetime_url_param})
